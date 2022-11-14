@@ -45,7 +45,7 @@ async def start_calculation(message: Message):
 
 @dp.message_handler(lambda m: m.text in ["Авто из США", "Авто из ОАЭ"])
 async def developed_countries(message: Message):
-    await message.answer()
+    await message.answer(developed_countries_text)
 
 
 @dp.message_handler(text="Пропустить", state=CalculateStates.enter_netto)
