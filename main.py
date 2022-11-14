@@ -131,7 +131,12 @@ async def select_transit(message: Message, state: FSMContext):
     res += data["price"] * 0.06 + 3600
     res *= 1.12
     await message.answer(res_text.format(res=int(res)), reply_markup=kb.res)
+    await state.finish()
 
+
+@dp.callback_query_handler(text="reset")
+async def func(call: CallbackQuery):
+    await call.message.answer(hello_text, reply_markup=kb.menu)
 
 @dp.message_handler(text="Консультация")
 async def help_message(message: Message):
