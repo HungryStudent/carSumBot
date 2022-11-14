@@ -9,6 +9,7 @@ from aiogram import Bot
 
 import keyboards as kb
 from config import *
+from texts import *
 
 stor = MemoryStorage()
 
