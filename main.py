@@ -8,8 +8,9 @@ from aiogram.utils import executor
 from aiogram import Bot
 
 import keyboards as kb
-from config import *
+from config import TOKEN
 from texts import *
+
 
 stor = MemoryStorage()
 
