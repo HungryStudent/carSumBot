@@ -43,7 +43,7 @@ async def start_calculation(message: Message):
     await message.answer(netto_text, reply_markup=kb.skip_netto)
 
 
-@dp.message_handler(lambda m: m.text in ["Авто из США", "Авто из ОАЭ"])
+@dp.message_handler(lambda mes: mes.text in ["Авто из США", "Авто из ОАЭ"])
 async def developed_countries(message: Message):
     await message.answer(developed_countries_text)
 
