@@ -16,4 +16,14 @@ car_old = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(KeyboardBut
 help = InlineKeyboardMarkup(row_width=1).add(
     InlineKeyboardButton(text="Задать вопрос", url=f"https://t.me/{admin_username}"))
 developed_countries = InlineKeyboardMarkup(row_width=1).add(
-    InlineKeyboardButton(text="Задать вопрос", url=f"https://t.me/{admin_username}"))
+    InlineKeyboardButton(text="Запросить расчёт", url=f"https://t.me/{admin_username}"))
+
+transit = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(KeyboardButton('До г.Брест (без пробега)'),
+                                                                     KeyboardButton('До г.Брест (своим ходом)'),
+                                                                     KeyboardButton('До г.Москва (без пробега)'),
+                                                                     KeyboardButton('До г.Москва (своим ходом)'))
+
+res = InlineKeyboardMarkup(resize_keyboard=True, row_width=1).add(
+    InlineKeyboardButton('Рассчитать ещё', callback_data="reset"),
+    InlineKeyboardButton('Заказать', url=f"https://t.me/{admin_username}"),
+    InlineKeyboardButton('Задать вопрос', url=f"https://t.me/{admin_username}"))
