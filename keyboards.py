@@ -1,6 +1,6 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.callback_data import CallbackData
-from config import admin_username
+from texts import admin_username
 
 menu = ReplyKeyboardMarkup(resize_keyboard=True, row_width=1).add(KeyboardButton('Авто из Германии'),
                                                                   KeyboardButton('Авто из США'),
