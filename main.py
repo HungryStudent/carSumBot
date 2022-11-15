@@ -116,13 +116,13 @@ async def select_transit(message: Message, state: FSMContext):
         res += data["price"] * 0.24
     elif data["car_old"] == "2":
         if 1001 < int(data["size"]) < 1500:
-            res += int(data["size"]) * 1.7
+            res += int(data["size"]) * 1.7/2
         if 1501 < int(data["size"]) < 1800:
-            res += int(data["size"]) * 2.5
+            res += int(data["size"]) * 2.5/2
         if 1801 < int(data["size"]) < 2300:
-            res += int(data["size"]) * 2.7
+            res += int(data["size"]) * 2.7/2
         if 2301 < int(data["size"]) < 3000:
-            res += int(data["size"]) * 3
+            res += int(data["size"]) * 3/2
         else:
             res += int(data["size"]) * 3.6
     elif data["car_old"] == "3":
