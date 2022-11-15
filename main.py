@@ -11,7 +11,6 @@ import keyboards as kb
 from config import TOKEN
 from texts import *
 
-
 stor = MemoryStorage()
 
 bot = Bot(token=TOKEN)
@@ -65,6 +64,7 @@ async def select_netto(message: Message, state: FSMContext):
         await state.update_data(price_type=PriceTypes.netto.value, price=int(message.text))
     except ValueError:
         await message.answer(int_error_text)
+        return
     await CalculateStates.enter_old.set()
     await message.answer(car_old_text, reply_markup=kb.car_old)
 
@@ -75,6 +75,7 @@ async def select_brutto(message: Message, state: FSMContext):
         await state.update_data(price_type=PriceTypes.brutto.value, price=int(message.text))
     except ValueError:
         await message.answer(int_error_text)
+        return
     await CalculateStates.enter_old.set()
     await message.answer(car_old_text, reply_markup=kb.car_old)
 
@@ -137,6 +138,8 @@ async def select_transit(message: Message, state: FSMContext):
 @dp.callback_query_handler(text="reset")
 async def func(call: CallbackQuery):
     await call.message.answer(hello_text, reply_markup=kb.menu)
+    await call.answer()
+
 
 @dp.message_handler(text="Консультация")
 async def help_message(message: Message):
