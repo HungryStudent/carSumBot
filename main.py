@@ -40,18 +40,18 @@ async def start_message(message: Message, state: FSMContext):
     await message.answer(hello_text, reply_markup=kb.menu)
 
 
-@dp.message_handler(text="Авто из Германии")
+@dp.message_handler(text=kb.country1)
 async def start_calculation(message: Message):
     await CalculateStates.enter_netto.set()
     await message.answer(netto_text, reply_markup=kb.skip_netto)
 
 
-@dp.message_handler(lambda mes: mes.text in ["Авто из США", "Авто из ОАЭ"])
+@dp.message_handler(lambda mes: mes.text in [kb.country2, kb.country3])
 async def developed_countries(message: Message):
     await message.answer(developed_countries_text, reply_markup=kb.developed_countries)
 
 
-@dp.message_handler(text="Пропустить", state=CalculateStates.enter_netto)
+@dp.message_handler(text=kb.skip_netto_text, state=CalculateStates.enter_netto)
 async def skip_netto(message: Message):
     await CalculateStates.next()
     await message.answer(brutto_text, reply_markup=ReplyKeyboardRemove())
@@ -59,7 +59,6 @@ async def skip_netto(message: Message):
 
 @dp.message_handler(state=CalculateStates.enter_netto)
 async def select_netto(message: Message, state: FSMContext):
-    print(message.text)
     try:
         await state.update_data(price_type=PriceTypes.netto.value, price=int(message.text))
     except ValueError:
@@ -80,10 +79,10 @@ async def select_brutto(message: Message, state: FSMContext):
     await message.answer(car_old_text, reply_markup=kb.car_old)
 
 
-@dp.message_handler(lambda m: m.text in ["Авто до 3-х лет", "Авто от 3-х до 5-ти лет", "Электрокар"],
+@dp.message_handler(lambda m: m.text in [kb.young_car, kb.old_car, kb.electric_car],
                     state=CalculateStates.enter_old)
 async def select_car_old(message: Message, state: FSMContext):
-    car_old_dict = {"Авто до 3-х лет": 1, "Авто от 3-х до 5-ти лет": 2, "Электрокар": 3}
+    car_old_dict = {kb.young_car: 1, kb.old_car: 2, kb.electric_car: 3}
     await state.update_data(car_old=car_old_dict[message.text])
 
     if car_old_dict[message.text] == 2:
@@ -106,31 +105,33 @@ async def select_size(message: Message, state: FSMContext):
 
 @dp.message_handler(state=CalculateStates.enter_transit)
 async def select_transit(message: Message, state: FSMContext):
-    transit_dict = {"До г.Брест (без пробега)": 1500, "До г.Брест (своим ходом)": 1200,
-                    "До г.Москва (без пробега)": 2850, "До г.Москва (своим ходом)": 2500}
+    transit_dict = {kb.brest_no_mileage: 1500, kb.brest_with_mileage: 1200,
+                    kb.moscow_no_mileage: 2850, kb.moscow_with_mileage: 2200}
     await state.update_data(transit=message.text)
 
     data = await state.get_data()
     res = data["price"]
-    if data["car_old"] == "1":
+    if data["car_old"] == 1:
         res += data["price"] * 0.24
-    elif data["car_old"] == "2":
-        if 1001 < int(data["size"]) < 1500:
-            res += int(data["size"]) * 1.7/2
-        if 1501 < int(data["size"]) < 1800:
-            res += int(data["size"]) * 2.5/2
-        if 1801 < int(data["size"]) < 2300:
-            res += int(data["size"]) * 2.7/2
-        if 2301 < int(data["size"]) < 3000:
-            res += int(data["size"]) * 3/2
+    elif data["car_old"] == 2:
+        if 1001 < data["size"] < 1500:
+            res += data["size"] * 1.7/2
+        elif 1501 < data["size"] < 1800:
+            res += data["size"] * 2.5/2
+        elif 1801 < data["size"] < 2300:
+            res += data["size"] * 2.7/2
+            print(data["size"] * 2.7 / 2)
+        elif 2301 < data["size"] < 3000:
+            res += data["size"] * 3/2
         else:
-            res += int(data["size"]) * 3.6/2
-    elif data["car_old"] == "3":
+            res += data["size"] * 3.6/2
+    elif data["car_old"] == 3:
         res += data["price"] * 0.075
 
     res += transit_dict[data["transit"]]
-    res += data["price"] * 0.06 + 3600
-    res *= 1.12
+    res += data["price"] * 0.06 + 3100
+    res *= 1.02
+    res *= 1.1
     await message.answer(res_text.format(res=int(res)), reply_markup=kb.res)
     await state.finish()
 
@@ -141,7 +142,7 @@ async def func(call: CallbackQuery):
     await call.answer()
 
 
-@dp.message_handler(text="Консультация")
+@dp.message_handler(text=kb.consultation)
 async def help_message(message: Message):
     await message.answer(help_text, reply_markup=kb.help)
 
